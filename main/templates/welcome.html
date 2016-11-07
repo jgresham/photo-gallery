@@ -1,31 +1,62 @@
 # extends 'base.html'
 
 # block header
-  <div class="jumbotron">
+<div class="jumbotron">
+  # if isEditMode
+  <!-- <div class="jumbotron">
     <div class="container">
       <h1>{{config.CONFIG_DB.brand_name}}</h1>
       <p>Hello, world!</p>
     </div>
-  </div>
+  </div> -->
+  # else
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+      </ol>
+
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner" role="listbox">
+        <div class="item active">
+          <img src="http://placekitten.com/200/300" alt="kitten#1">
+          <div class="carousel-caption">
+            ...
+          </div>
+        </div>
+        <div class="item">
+          <img src="http://placekitten.com/200/300" alt="kitten#2">
+          <div class="carousel-caption">
+            ...
+          </div>
+        </div>
+        ...
+      </div>
+    </div>
+  # endif
+</div>
 # endblock
 
 # block content
   <div class="row">
+    # if isEditMode
     <div class="col-sm-6 col-md-4 col-lg-3">
-      <h2>Heading</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      <h2>New Album</h2>
+      <a class="btn btn-default" href="{{url_for('album_edit')}}" title="New Album">
+        <span class="fa fa-plus fa-fw"></span>
+      </a>
     </div>
-    <div class="col-sm-6 col-md-4 col-lg-3">
-      <h2>Heading</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div class="col-sm-6 col-md-4 col-lg-3">
-      <h2>Heading</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div class="col-sm-6 col-md-12 col-lg-3">
-      <h2>Heading</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
+    # endif
+    # for album_db in album_dbs
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <h2>{{album_db.title}}</h2>
+        # if album_db.image_url
+          <div class="image-preview">
+            <img class="img-responsive img-thumbnail" src="{{album_db.image_url}}=s1024">
+          </div>
+        # endif
+      </div>
+    # endfor
   </div>
 # endblock

@@ -7,6 +7,7 @@ config =
     "#{paths.static.ext}/bootstrap/js/alert.js"
     "#{paths.static.ext}/bootstrap/js/button.js"
     "#{paths.static.ext}/bootstrap/js/transition.js"
+    "#{paths.static.ext}/bootstrap/js/carousel.js"
     "#{paths.static.ext}/bootstrap/js/collapse.js"
     "#{paths.static.ext}/bootstrap/js/dropdown.js"
     "#{paths.static.ext}/bootstrap/js/tooltip.js"

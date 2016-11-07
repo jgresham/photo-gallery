@@ -18,59 +18,77 @@ import cloudstorage as gcs
 ###############################################################################
 # Upload
 ###############################################################################
-@app.route('/resource/upload/')
+@app.route('/album/<int:album_id>/edit')
 @auth.login_required
-def resource_upload():
-  return flask.render_template(
-    'resource/resource_upload.html',
-    title='Resource Upload',
-    html_class='resource-upload',
-    get_upload_url=flask.url_for('api.resource.upload'),
-    has_json=True,
-    upload_url=blobstore.create_upload_url(
-      flask.request.path,
-      gs_bucket_name=config.CONFIG_DB.bucket_name or None,
-    ),
-  )
+def album_edit(album_id):
+    album_db = model.Album.get_by_id(album_id)
+
+    if album_db
+        if album_db.user_key != auth.current_user_key():
+            return flask.abort(404)
+        else:
+            resource_dbs = album_db.get_resource_dbs()
+
+    if not album_db:
+        album_db = model.Album(user_key=auth.current_user_key())
+        album_db.put()
+
+    return flask.render_template(
+      'album/album_upload.html',
+      title='Album Upload',
+      html_class='album-upload',
+      get_upload_url=flask.url_for('api.album.resource.upload', key=album_db.key.urlsafe()),
+      has_json=True,
+      upload_url=blobstore.create_upload_url(
+        flask.request.path,
+        gs_bucket_name=config.CONFIG_DB.bucket_name or None,
+      ),
+      album_db=album_db,
+      resource_dbs=resource_dbs,
+    )
+
 
 ###############################################################################
 # List
 ###############################################################################
-@app.route('/resource/', endpoint='resource_list')
-@auth.login_required
-def resource_list():
-  resource_dbs, resource_cursor = auth.current_user_db().get_resource_dbs()
-
-  return flask.render_template(
-    'resource/resource_list.html',
-    html_class='resource-list',
-    title='Resource List',
-    resource_dbs=resource_dbs,
-    next_url=util.generate_next_url(resource_cursor),
-    api_url=flask.url_for('api.resource.list'),
-  )
+# @app.route('/album/', endpoint='album_list')
+# @auth.login_required
+# def resource_list():
+#   resource_dbs, resource_cursor = auth.current_user_db().get_resource_dbs()
+#
+#   return flask.render_template(
+#     'resource/resource_list.html',
+#     html_class='resource-list',
+#     title='Resource List',
+#     resource_dbs=resource_dbs,
+#     next_url=util.generate_next_url(resource_cursor),
+#     api_url=flask.url_for('api.resource.list'),
+#   )
 
 
 ###############################################################################
 # View
 ###############################################################################
-@app.route('/resource/<int:resource_id>/', endpoint='resource_view')
-@auth.login_required
-def resource_view(resource_id):
-  resource_db = model.Resource.get_by_id(resource_id)
+@app.route('/album/<int:album_id>/', endpoint='album_view')
+def album_view(album_id):
+  album_db = model.Album.get_by_id(album_id)
 
+  if album_db
+      if album_db.user_key != auth.current_user_key():
+          return flask.abort(404)
+      else:
+          resource_dbs = album_db.get_resource_dbs()
   if not resource_db or resource_db.user_key != auth.current_user_key():
     return flask.abort(404)
 
   return flask.render_template(
-    'resource/resource_view.html',
-    html_class='resource-view',
-    title='%s' % (resource_db.name),
-    resource_db=resource_db,
-    api_url=flask.url_for('api.resource', key=resource_db.key.urlsafe()),
+    'album/album_view.html',
+    html_class='album-view',
+    title='%s' % (album_db.name or 'Album'),
+    album_db=album_db,
+    resource_dbs=resource_dbs,
+    api_url=flask.url_for('api.album', key=album_db.key.urlsafe()),
   )
-
-
 ###############################################################################
 # Update
 ###############################################################################

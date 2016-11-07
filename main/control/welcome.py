@@ -6,14 +6,23 @@ import config
 
 from main import app
 
-
 ###############################################################################
 # Welcome
 ###############################################################################
 @app.route('/')
 def welcome():
-  return flask.render_template('welcome.html', html_class='welcome')
+    return make_home_template(isEditMode=False)
 
+@app.route('/edit')
+def edit():
+  return make_home_template(isEditMode=True)
+
+def make_home_template(isEditMode):
+    
+    return flask.render_template(
+        'welcome.html',
+        html_class='welcome',
+        isEditMode=isEditMode)
 
 ###############################################################################
 # Sitemap stuff

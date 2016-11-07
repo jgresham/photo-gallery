@@ -22,56 +22,55 @@ from main import api_v1
 ###############################################################################
 # Endpoints
 ###############################################################################
-@api_v1.resource('/resource/', endpoint='api.resource.list')
-class ResourceListAPI(flask_restful.Resource):
-  @auth.admin_required
-  def get(self):
-    resource_keys = util.param('resource_keys', list)
-    if resource_keys:
-      resource_db_keys = [ndb.Key(urlsafe=k) for k in resource_keys]
-      resource_dbs = ndb.get_multi(resource_db_keys)
-      return helpers.make_response(resource_dbs, model.Resource.FIELDS)
+# @api_v1.resource('/resource/', endpoint='api.resource.list')
+# class ResourceListAPI(flask_restful.Resource):
+#   @auth.admin_required
+#   def get(self):
+#     resource_keys = util.param('resource_keys', list)
+#     if resource_keys:
+#       resource_db_keys = [ndb.Key(urlsafe=k) for k in resource_keys]
+#       resource_dbs = ndb.get_multi(resource_db_keys)
+#       return helpers.make_response(resource_dbs, model.Resource.FIELDS)
+#
+#     resource_dbs, next_cursor = model.Resource.get_dbs()
+#     return helpers.make_response(
+#         resource_dbs, model.Resource.FIELDS, next_cursor,
+#       )
+#
+#   @auth.admin_required
+#   def delete(self):
+#     resource_keys = util.param('resource_keys', list)
+#     if not resource_keys:
+#       helpers.make_not_found_exception(
+#           'Resource(s) %s not found' % resource_keys
+#         )
+#     resource_db_keys = [ndb.Key(urlsafe=k) for k in resource_keys]
+#     delete_resource_dbs(resource_db_keys)
+#     return flask.jsonify({
+#         'result': resource_keys,
+#         'status': 'success',
+#       })
 
-    resource_dbs, next_cursor = model.Resource.get_dbs()
-    return helpers.make_response(
-        resource_dbs, model.Resource.FIELDS, next_cursor,
-      )
 
-  @auth.admin_required
-  def delete(self):
-    resource_keys = util.param('resource_keys', list)
-    if not resource_keys:
-      helpers.make_not_found_exception(
-          'Resource(s) %s not found' % resource_keys
-        )
-    resource_db_keys = [ndb.Key(urlsafe=k) for k in resource_keys]
-    delete_resource_dbs(resource_db_keys)
-    return flask.jsonify({
-        'result': resource_keys,
-        'status': 'success',
-      })
-
-
-@api_v1.resource('/resource/<string:key>/', endpoint='api.resource')
-class ResourceAPI(flask_restful.Resource):
-  @auth.login_required
+@api_v1.resource('/album/<string:key>/', endpoint='api.album')
+class AlbumAPI(flask_restful.Resource):
   def get(self, key):
-    resource_db = ndb.Key(urlsafe=key).get()
-    if not resource_db and resource_db.user_key != auth.current_user_key():
-      helpers.make_not_found_exception('Resource %s not found' % key)
-    return helpers.make_response(resource_db, model.Resource.FIELDS)
+    album_db = ndb.Key(urlsafe=key).get()
+    if not album_db:
+      helpers.make_not_found_exception('Album %s not found' % key)
+    return helpers.make_response(album_db, model.Album.FIELDS)
 
   @auth.login_required
   def delete(self, key):
-    resource_db = ndb.Key(urlsafe=key).get()
-    if not resource_db or resource_db.user_key != auth.current_user_key():
-      helpers.make_not_found_exception('Resource %s not found' % key)
-    delete_resource_key(resource_db.key)
-    return helpers.make_response(resource_db, model.Resource.FIELDS)
+    album_db = ndb.Key(urlsafe=key).get()
+    if not album_db or album_db.user_key != auth.current_user_key():
+      helpers.make_not_found_exception('Album %s not found' % key)
+    delete_resource_key(album_db.key)
+    return helpers.make_response(album_db, model.Album.FIELDS)
 
 
-@api_v1.resource('/resource/upload/', endpoint='api.resource.upload')
-class ResourceUploadAPI(flask_restful.Resource):
+@api_v1.resource('/album/<string:key>/resource/upload/', endpoint='api.album.resource.upload')
+class AlbumResourceUploadAPI(flask_restful.Resource):
   @auth.login_required
   def get(self):
     count = util.param('count', int) or 1
@@ -88,10 +87,12 @@ class ResourceUploadAPI(flask_restful.Resource):
       })
 
   @auth.login_required
-  def post(self):
-    resource_db = resource_db_from_upload()
-    if resource_db:
-      return helpers.make_response(resource_db, model.Resource.FIELDS)
+  def post(self, key):
+    album_db = ndb.Key(urlsafe=key).get()
+    if album_db and album_db.user_key == auth.current_user_key():
+        resource_db = resource_db_from_upload(album_db=album_db)
+        if resource_db:
+          return helpers.make_response(resource_db, model.Resource.FIELDS)
     flask.abort(500)
 
 
@@ -111,7 +112,7 @@ def delete_resource_key(resource_key):
     resource_db.key.delete()
 
 
-def resource_db_from_upload():
+def resource_db_from_upload(album_db=album_db):
   try:
     uploaded_file = flask.request.files['file']
   except:
@@ -128,6 +129,7 @@ def resource_db_from_upload():
       pass
 
   resource_db = model.Resource(
+      album_key=album_db.key,
       user_key=auth.current_user_key(),
       blob_key=blob_info.key(),
       name=blob_info.filename,
@@ -136,6 +138,5 @@ def resource_db_from_upload():
       image_url=image_url,
       bucket_name=config.CONFIG_DB.bucket_name or None,
     )
-  pdb.set_trace()
   resource_db.put()
   return resource_db
