@@ -15,37 +15,41 @@ import util
 from main import app
 import cloudstorage as gcs
 
+import pdb
+
 ###############################################################################
 # Upload
 ###############################################################################
-@app.route('/album/<int:album_id>/edit')
+@app.route('/album/create')
 @auth.login_required
-def album_edit(album_id):
-    album_db = model.Album.get_by_id(album_id)
-
-    if album_db
-        if album_db.user_key != auth.current_user_key():
-            return flask.abort(404)
-        else:
-            resource_dbs = album_db.get_resource_dbs()
-
-    if not album_db:
-        album_db = model.Album(user_key=auth.current_user_key())
-        album_db.put()
-
-    return flask.render_template(
-      'album/album_upload.html',
-      title='Album Upload',
-      html_class='album-upload',
-      get_upload_url=flask.url_for('api.album.resource.upload', key=album_db.key.urlsafe()),
-      has_json=True,
-      upload_url=blobstore.create_upload_url(
-        flask.request.path,
-        gs_bucket_name=config.CONFIG_DB.bucket_name or None,
-      ),
-      album_db=album_db,
-      resource_dbs=resource_dbs,
-    )
+def album_create():
+    # album_db = model.Album.get_by_id(album_id)
+    #
+    # if album_db
+    #     if album_db.user_key != auth.current_user_key():
+    #         return flask.abort(404)
+    #     else:
+    #         resource_dbs = album_db.get_resource_dbs()
+    #
+    # if not album_db:
+    album_db = model.Album(user_key=auth.current_user_key())
+    album_db.put()
+    return flask.redirect(flask.url_for(
+      'album_update', album_id=album_db.key.id(),
+    ))
+    # return flask.render_template(
+    #   'album/album_upload.html',
+    #   title='Album Upload',
+    #   html_class='album-upload',
+    #   get_upload_url=flask.url_for('api.album.resource.upload', key=album_db.key.urlsafe()),
+    #   has_json=True,
+    #   upload_url=blobstore.create_upload_url(
+    #     flask.request.path,
+    #     gs_bucket_name=config.CONFIG_DB.bucket_name or None,
+    #   ),
+    #   album_db=album_db,
+    #   resource_dbs=resource_dbs,
+    # )
 
 
 ###############################################################################
@@ -73,12 +77,12 @@ def album_edit(album_id):
 def album_view(album_id):
   album_db = model.Album.get_by_id(album_id)
 
-  if album_db
+  if album_db:
       if album_db.user_key != auth.current_user_key():
           return flask.abort(404)
       else:
           resource_dbs = album_db.get_resource_dbs()
-  if not resource_db or resource_db.user_key != auth.current_user_key():
+  if not album_db:
     return flask.abort(404)
 
   return flask.render_template(
@@ -89,49 +93,58 @@ def album_view(album_id):
     resource_dbs=resource_dbs,
     api_url=flask.url_for('api.album', key=album_db.key.urlsafe()),
   )
+
 ###############################################################################
 # Update
 ###############################################################################
-class ResourceUpdateForm(flask_wtf.FlaskForm):
+class AlbumUpdateForm(flask_wtf.FlaskForm):
   name = wtforms.TextField('Name', [wtforms.validators.required()])
+  description = wtforms.TextField('Description', [wtforms.validators.required()])
 
 
-@app.route('/resource/<int:resource_id>/update/', methods=['GET', 'POST'], endpoint='resource_update')
+@app.route('/album/<int:album_id>/update/', methods=['GET', 'POST'], endpoint='album_update')
 @auth.login_required
-def resource_update(resource_id):
-  resource_db = model.Resource.get_by_id(resource_id)
+def album_update(album_id):
+  album_db = model.Album.get_by_id(album_id)
 
-  if not resource_db or resource_db.user_key != auth.current_user_key():
+  if not album_db or album_db.user_key != auth.current_user_key():
     return flask.abort(404)
 
-  form = ResourceUpdateForm(obj=resource_db)
+  form = AlbumUpdateForm(obj=album_db)
 
   if form.validate_on_submit():
-    form.populate_obj(resource_db)
-    resource_db.put()
+    form.populate_obj(album_db)
+    album_db.put()
     return flask.redirect(flask.url_for(
-      'resource_view', resource_id=resource_db.key.id(),
+      'album_view', album_id=album_db.key.id(),
     ))
 
+  resource_dbs, cursors = album_db.get_resource_dbs()
   return flask.render_template(
-    'resource/resource_update.html',
-    html_class='resource-update',
-    title='%s' % (resource_db.name),
-    resource_db=resource_db,
+    'album/album_update.html',
+    html_class='album-update',
+    title='%s' % (album_db.name),
+    album_db=album_db,
     form=form,
-    api_url=flask.url_for('api.resource', key=resource_db.key.urlsafe()),
+    resource_dbs=resource_dbs,
+    get_upload_url=flask.url_for('api.album.resource.upload', key=album_db.key.urlsafe()),
+    has_json=True,
+    upload_url=blobstore.create_upload_url(
+      flask.request.path,
+      gs_bucket_name=config.CONFIG_DB.bucket_name or None,
+    ),
+    # api_url=flask.url_for('api.resource', key=resource_db.key.urlsafe()),
   )
-
 
 ###############################################################################
 # Download
 ###############################################################################
-@app.route('/resource/<int:resource_id>/download/')
-@auth.login_required
-def resource_download(resource_id):
-  resource_db = model.Resource.get_by_id(resource_id)
-  if not resource_db or resource_db.user_key != auth.current_user_key():
-    return flask.abort(404)
-  name = urllib.quote(resource_db.name.encode('utf-8'))
-  url = '/serve/%s?save_as=%s' % (resource_db.blob_key, name)
-  return flask.redirect(url)
+# @app.route('/resource/<int:resource_id>/download/')
+# @auth.login_required
+# def resource_download(resource_id):
+#   resource_db = model.Resource.get_by_id(resource_id)
+#   if not resource_db or resource_db.user_key != auth.current_user_key():
+#     return flask.abort(404)
+#   name = urllib.quote(resource_db.name.encode('utf-8'))
+#   url = '/serve/%s?save_as=%s' % (resource_db.blob_key, name)
+#   return flask.redirect(url)

@@ -112,7 +112,7 @@ def delete_resource_key(resource_key):
     resource_db.key.delete()
 
 
-def resource_db_from_upload(album_db=album_db):
+def resource_db_from_upload(album_db):
   try:
     uploaded_file = flask.request.files['file']
   except:

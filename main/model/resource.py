@@ -11,6 +11,7 @@ import util
 
 
 class Resource(model.Base):
+  album_key = ndb.KeyProperty(kind=model.Album, required=True)
   user_key = ndb.KeyProperty(kind=model.User, required=True)
   blob_key = ndb.BlobKeyProperty(required=True)
   name = ndb.StringProperty(required=True)

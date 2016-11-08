@@ -1,0 +1,79 @@
+# extends 'base.html'
+# import 'macro/utils.html' as utils
+# import 'macro/forms.html' as forms
+
+# block content
+  <div class="page-header">
+    <h1>
+      {{utils.back_link('Back', 'edit')}}
+      {{title}}
+    </h1>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <form class="form" method="POST" action=".">
+        <fieldset>
+          {{form.csrf_token}}
+          {{forms.text_field(form.name)}}
+          {{forms.text_field(form.description)}}
+
+          <button type="submit" class="btn btn-primary btn-block btn-loading" {{forms.data_loading_text()}}>
+            Update
+          </button>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+  <br>
+  <form id="upload" class="form-horizontal" method="POST" action="{{upload_url}}" enctype='multipart/form-data'>
+    <fieldset>
+      <div class='control-group pretty-file'>
+        <div class='controls'>
+          <input class="file" name="file[]" data-get-upload-url="{{get_upload_url}}" type="file" multiple="multiple">
+          <div class="input-group">
+            <span class="input-group-addon">Choose Files</span>
+            <input type="text" class="form-control">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button">Browse</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+  <hr>
+  <div class="drop-area">
+    drop files here
+  </div>
+
+  # for resource_db in resource_dbs
+    <tr id="{{resource_db.key.urlsafe()}}" class="row-link" data-href="{{url_for('resource_view', resource_id=resource_db.key.id())}}">
+      <td class="ellipsis">{{resource_db.name}}</td>
+      # if resource_db.image_url
+        <td>
+          <div class="image-preview">
+            <img class="img-responsive img-thumbnail" src="{{resource_db.image_url}}=s256">
+          </div>
+        </td>
+      # endif
+      <td class="hidden-xs">{{resource_db.content_type}}</td>
+      <td class="hidden-xs">
+        <time datetime="{{resource_db.created}}">
+          {{resource_db.created.strftime('%Y-%m-%d')}}
+        </time>
+      </td>
+      <td class="text-right text-nowrap">{{resource_db.size_human}}</td>
+      <td class="text-nowrap not-link">
+        <a class="btn btn-xs btn-success" href="{{url_for('resource_download', resource_id=resource_db.key.id())}}">
+          <span class="fa fa-fw fa-cloud-download"></span>
+        </a>
+        <button class="btn btn-xs btn-danger btn-delete"
+            data-api-url="{{url_for('api.resource', key=resource_db.key.urlsafe())}}"
+            data-target="#{{resource_db.key.urlsafe()}}"
+          >
+          <span class="fa fa-fw fa-trash-o"></span>
+        </button>
+      </td>
+    </tr>
+  # endfor
+# endblock
