@@ -15,6 +15,7 @@ import util
 from main import app
 import cloudstorage as gcs
 
+from urlparse import urlparse
 import pdb
 
 ###############################################################################
@@ -32,7 +33,12 @@ def album_create():
     #         resource_dbs = album_db.get_resource_dbs()
     #
     # if not album_db:
-    album_db = model.Album(user_key=auth.current_user_key())
+    parsed_request = urlparse(flask.request.url)
+    hostname = parsed_request.hostname
+    album_db = model.Album(
+        user_key=auth.current_user_key(),
+        hostname=hostname
+    )
     album_db.put()
     return flask.redirect(flask.url_for(
       'album_update', album_id=album_db.key.id(),
@@ -51,6 +57,37 @@ def album_create():
     #   resource_dbs=resource_dbs,
     # )
 
+@app.route('/album/create/carousel')
+@auth.login_required
+def album_create_carousel():
+    parsed_request = urlparse(flask.request.url)
+    hostname = parsed_request.hostname
+
+    query = model.Album.query(
+      ndb.AND(
+        user_key==auth.current_user_key(),
+        hostname==hostname,
+        isCarousel==True
+      )
+    )
+    album_db = query.fetch(1)
+
+    if album_db:
+        if album_db.user_key != auth.current_user_key():
+            return flask.abort(404)
+        else:
+            resource_dbs = album_db.get_resource_dbs()
+
+    if not album_db:
+        album_db = model.Album(
+            user_key=auth.current_user_key(),
+            hostname=hostname,
+            isCarousel=True
+        )
+        album_db.put()
+        return flask.redirect(flask.url_for(
+          'album_update', album_id=album_db.key.id(),
+        ))
 
 ###############################################################################
 # List
@@ -77,21 +114,16 @@ def album_create():
 def album_view(album_id):
   album_db = model.Album.get_by_id(album_id)
 
-  if album_db:
-      if album_db.user_key != auth.current_user_key():
-          return flask.abort(404)
-      else:
-          resource_dbs = album_db.get_resource_dbs()
-  if not album_db:
+  if not album_db or album_db.user_key != auth.current_user_key():
     return flask.abort(404)
 
+  resource_dbs, cursors = album_db.get_resource_dbs()
   return flask.render_template(
     'album/album_view.html',
     html_class='album-view',
-    title='%s' % (album_db.name or 'Album'),
+    title='%s' % (album_db.name),
     album_db=album_db,
     resource_dbs=resource_dbs,
-    api_url=flask.url_for('api.album', key=album_db.key.urlsafe()),
   )
 
 ###############################################################################
@@ -133,7 +165,7 @@ def album_update(album_id):
       flask.request.path,
       gs_bucket_name=config.CONFIG_DB.bucket_name or None,
     ),
-    # api_url=flask.url_for('api.resource', key=resource_db.key.urlsafe()),
+    # api_url=flask.url_for('api.album.resource.upload', key=album_db.key.urlsafe()),
   )
 
 ###############################################################################

@@ -12,6 +12,8 @@ import util
 
 class Album(model.Base):
   user_key = ndb.KeyProperty(kind=model.User, required=True)
+  hostname = ndb.StringProperty(required=True)
+  isCarousel = ndb.BooleanProperty(default=False)
   name = ndb.StringProperty()
   description = ndb.StringProperty()
 

@@ -18,7 +18,11 @@ def edit():
   return make_home_template(isEditMode=True)
 
 def make_home_template(isEditMode):
-    
+
+    # get carousel resources
+
+    # get site album
+
     return flask.render_template(
         'welcome.html',
         html_class='welcome',

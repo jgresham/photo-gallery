@@ -14,47 +14,17 @@
     </h1>
   </div> #}
 
-  <div class="row">
-    <div class="col-md-6">
-      <table class="table table-bordered table-striped">
-        <tbody>
-          <tr>
-            <th class="text-nowrap col-xs-1">Name</th>
-            <td class="col-xs-11">{{album_db.name}}</td>
-          </tr>
-          <tr>
-            <th class="text-nowrap col-xs-1">Description</th>
-            <td class="col-xs-11">{{album_db.description}}</td>
-          </tr>
-          <tr>
-            <th class="text-nowrap col-xs-1">Size</th>
-            <td class="col-xs-11">{{resource_db.size_human}}</td>
-          </tr>
-          <tr>
-            <th class="text-nowrap col-xs-1">Created</th>
-            <td class="col-xs-11">
-              <time datetime="{{resource_db.created}}">
-                {{resource_db.created.strftime('%Y-%m-%d')}}
-              </time>
-            </td>
-          </tr>
-          <tr>
-            <th class="text-nowrap col-xs-1">Modifed</th>
-            <td class="col-xs-11">
-              <time datetime="{{resource_db.modified}}">
-                {{resource_db.modified.strftime('%Y-%m-%d')}}
-              </time>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    # if resource_db.image_url
-      <div class="col-md-6">
-        <div class="image-preview">
-          <img class="img-responsive img-thumbnail" src="{{resource_db.image_url}}=s1024">
-        </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1>{{album_db.name}}</h1>
+        <p>{{album_db.description}}</p>
+        # for resource_db in resource_dbs
+          # if resource_db.image_url
+            <img class="img-responsive center-block album-image" src="{{resource_db.image_url}}=s512">
+          # endif
+        # endfor
       </div>
-    # endif
+    </div>
   </div>
 # endblock

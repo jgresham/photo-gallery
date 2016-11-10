@@ -9,6 +9,36 @@
       <p>Hello, world!</p>
     </div>
   </div> -->
+  <div class="row">
+    <div class="col-xs-12 col-md-4 col-lg-3">
+      <div class="image-preview carousel-edit-image carousel-edit-image-upload">
+        <form id="upload" class="form-horizontal" method="POST" action="{{upload_url}}" enctype='multipart/form-data'>
+          <fieldset>
+            <div class='control-group pretty-file'>
+              <div class='controls'>
+                <input class="file" name="file[]" data-get-upload-url="{{get_upload_url}}" type="file" multiple="multiple">
+                <div class="input-group center-block">
+                  <div class="btn btn-default update-carousel">
+                    <span class="fa fa-plus fa-fw"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+    # for cover_album_resource_db in cover_album_resource_dbs
+      # if cover_album_resource_db.image_url
+        <div class="col-xs-12 col-md-4 col-lg-3">
+          <div class="image-preview carousel-edit-image">
+            <img class="img-responsive img-thumbnail" src="{{cover_album_resource_db.image_url}}=s256">
+            </div>
+          </div>
+        </div>
+      # endif
+    # endfor
+  </div>
   # else
     <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
       <!-- Indicators -->
@@ -43,7 +73,7 @@
     # if isEditMode
     <div class="col-sm-6 col-md-4 col-lg-3">
       <h2>New Album</h2>
-      <a class="btn btn-default" href="{{url_for('album_edit')}}" title="New Album">
+      <a class="btn btn-default" href="{{url_for('album_create')}}" title="New Album">
         <span class="fa fa-plus fa-fw"></span>
       </a>
     </div>

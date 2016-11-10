@@ -72,7 +72,7 @@ class AlbumAPI(flask_restful.Resource):
 @api_v1.resource('/album/<string:key>/resource/upload/', endpoint='api.album.resource.upload')
 class AlbumResourceUploadAPI(flask_restful.Resource):
   @auth.login_required
-  def get(self):
+  def get(self, key):
     count = util.param('count', int) or 1
     urls = []
     for i in range(count):
