@@ -16,12 +16,14 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-lg-12">
+      <div class="col-lg-12 text-center">
         <h1>{{album_db.name}}</h1>
         <p>{{album_db.description}}</p>
         # for resource_db in resource_dbs
           # if resource_db.image_url
-            <img class="img-responsive center-block album-image" src="{{resource_db.image_url}}=s512">
+            <div class="album-image-container">
+              <img class="img-responsive center-block album-image" src="{{resource_db.image_url}}=s512">
+            </div>
           # endif
         # endfor
       </div>

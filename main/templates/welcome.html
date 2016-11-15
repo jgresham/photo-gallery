@@ -1,91 +1,120 @@
 # extends 'base.html'
 
 # block header
-<div class="jumbotron">
-  # if isEditMode
-  <!-- <div class="jumbotron">
-    <div class="container">
-      <h1>{{config.CONFIG_DB.brand_name}}</h1>
-      <p>Hello, world!</p>
-    </div>
-  </div> -->
-  <div class="row">
-    <div class="col-xs-12 col-md-4 col-lg-3">
-      <div class="image-preview carousel-edit-image carousel-edit-image-upload">
-        <form id="upload" class="form-horizontal" method="POST" action="{{upload_url}}" enctype='multipart/form-data'>
-          <fieldset>
-            <div class='control-group pretty-file'>
-              <div class='controls'>
-                <input class="file" name="file[]" data-get-upload-url="{{get_upload_url}}" type="file" multiple="multiple">
-                <div class="input-group center-block">
-                  <div class="btn btn-default update-carousel">
-                    <span class="fa fa-plus fa-fw"></span>
+  <div class="jumbotron">
+    # if isEditMode
+      {#
+      <div class="jumbotron">
+          <div class="container">
+            <h1>{{config.CONFIG_DB.brand_name}}</h1>
+            <p>Hello, world!</p>
+          </div>
+      </div>
+      #}
+      <div class="row resource-uploads">
+        <div class="col-xs-12 col-md-4 col-lg-3 carousel-edit-image carousel-edit-image-upload col-carousel_resource">
+          <div class="image-preview">
+            <form id="upload" class="form-horizontal" method="POST" action="{{upload_url}}" enctype='multipart/form-data'>
+              <fieldset>
+                <div class='control-group pretty-file'>
+                  <div class='controls'>
+                    <input class="file" name="file[]" data-get-upload-url="{{get_upload_url}}" type="file" multiple="multiple">
+                    <div class="input-group center-block">
+                      <div class="btn btn-default update-carousel">
+                        <span class="fa fa-plus fa-fw"></span>
+                      </div>
+                    </div>
                   </div>
                 </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+        # for carousel_resource_db in carousel_resource_dbs
+          # if carousel_resource_db.image_url
+            <div class="col-xs-12 col-md-4 col-lg-3 col-carousel_resource">
+              <div class="image-preview carousel-edit-image">
+                <img class="img-responsive img-thumbnail" src="{{carousel_resource_db.image_url}}=s128">
+                <button class="btn btn-danger btn-delete"
+                    data-api-url="{{url_for('api.resource', key=carousel_resource_db.key.urlsafe())}}"
+                    title="Delete">
+                  <span class="fa fa-trash-o"></span>
+                </button>
               </div>
             </div>
-          </fieldset>
-        </form>
-      </div>
-    </div>
-    # for cover_album_resource_db in cover_album_resource_dbs
-      # if cover_album_resource_db.image_url
-        <div class="col-xs-12 col-md-4 col-lg-3">
-          <div class="image-preview carousel-edit-image">
-            <img class="img-responsive img-thumbnail" src="{{cover_album_resource_db.image_url}}=s256">
+            {#
+            <div class="card">
+              <img src="{{carousel_resource_db.image_url}}=s128" alt="Card image">
+              <div class="card-block">
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+              </div>
             </div>
-          </div>
-        </div>
-      # endif
-    # endfor
-  </div>
-  # else
-    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-      <!-- Indicators -->
-      <ol class="carousel-indicators">
-        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-        <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-      </ol>
-
-      <!-- Wrapper for slides -->
-      <div class="carousel-inner" role="listbox">
-        <div class="item active">
-          <img src="http://placekitten.com/200/300" alt="kitten#1">
-          <div class="carousel-caption">
-            ...
-          </div>
-        </div>
-        <div class="item">
-          <img src="http://placekitten.com/200/300" alt="kitten#2">
-          <div class="carousel-caption">
-            ...
-          </div>
-        </div>
-        ...
+            #}
+          # endif
+        # endfor
       </div>
-    </div>
-  # endif
-</div>
+    # else
+      <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-pause="false" data-interval="8000">
+
+        <ol class="carousel-indicators">
+          # for carousel_resource_db in carousel_resource_dbs
+            # if carousel_resource_db.image_url
+              # if loop.index0 == 0
+                <li data-target="#carousel-example-generic" data-slide-to="{{loop.index0}}" class="active"></li>
+              # else
+                <li data-target="#carousel-example-generic" data-slide-to="{{loop.index0}}"></li>
+              # endif
+            # endif
+          # endfor
+
+        </ol>
+
+        <div class="carousel-inner" role="listbox">
+          # for carousel_resource_db in carousel_resource_dbs
+            # if carousel_resource_db.image_url
+              # if loop.index0 == 0
+                <div class="item active">
+                  <div class="fill" style="background-image:url('{{carousel_resource_db.image_url}}');">
+                  </div>
+                </div>
+              # else
+                <div class="item">
+                  <div class="fill" style="background-image:url('{{carousel_resource_db.image_url}}');">
+                  </div>
+                </div>
+              # endif
+            # endif
+          # endfor
+        </div>
+      </div>
+    # endif
+  </div>
 # endblock
 
 # block content
   <div class="row">
     # if isEditMode
-    <div class="col-sm-6 col-md-4 col-lg-3">
+    <div class="col-sm-6 col-md-4 col-lg-3 col-album">
       <h2>New Album</h2>
       <a class="btn btn-default" href="{{url_for('album_create')}}" title="New Album">
         <span class="fa fa-plus fa-fw"></span>
       </a>
     </div>
     # endif
-    # for album_db in album_dbs
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <h2>{{album_db.title}}</h2>
-        # if album_db.image_url
-          <div class="image-preview">
-            <img class="img-responsive img-thumbnail" src="{{album_db.image_url}}=s1024">
+    # for album_info in album_list
+      <div class="col-sm-6 col-md-4 col-lg-3 col-album">
+        <a class="album-image-a" href="{{url_for('album_view', album_id=album_info['album_db'].key.id())}}">
+          <div class="caption">
+            <h2>{{album_info['album_db'].name}}</h2>
+            <p>{{album_info['album_db'].description}}</p>
           </div>
-        # endif
+          # if album_info['image_url']
+            <div class="image-preview">
+              <img class="img-responsive img-thumbnail" src="{{album_info['image_url']}}=s1024">
+            </div>
+          # endif
+        </a>
       </div>
     # endfor
   </div>

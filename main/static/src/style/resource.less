@@ -72,25 +72,73 @@ td {
   }
 }
 
-.album-view, .album-update {
-  text-align: center;
+// JGRESHAM
 
+.album-view, .album-update {
   .album-image {
     margin-bottom: 5px;
   }
+  .album-image-container {
+    margin-bottom: 10px;
+  }
 }
 .welcome {
+  .album-image-a {
+    position:relative;
+    height: 100%;
+    overflow:hidden;
+    display: block;
+    color: inherit;
+  }
+  .caption {
+      position:absolute;
+      top:0;
+      right:0;
+      background:rgba(255, 255, 255, 0.55);
+      width:100%;
+      height:100%;
+      padding:2%;
+      display: none;
+      text-align:center;
+      z-index:2;
+  }
+  .col-carousel_resource {
+    display: flex;
+    justify-content: center;
+  }
+
+  .col-carousel_resource .image-preview {
+    align-self: center;
+  }
+  .col-carousel_resource, .col-album {
+    height: 150px;
+  }
   .jumbotron {
-    height: 90vh;
+    height:100%;
+    padding: 0;
   }
   .carousel-edit-image {
-    // position: relative;
-    // top: 50%;
-    // transform: translateY(-50%);
-    // width: 100%;
+    text-align: center;
   }
   .update-carousel {
-    display: table;
+    text-align: center;
     margin: 0 auto;
   }
+  html, body, .carousel, .carousel-inner, .item, .active {
+    height:100%;
+  }
+  .carousel-inner > .item {
+    height: 100%;
+  }
+  .fill, .carousel-image{
+    width:100%;
+    height:100%;
+    background-position:center;
+    background-size:cover;
+    background-repeat: no-repeat;
+  }
+
+  // .input-group {
+  //   height: 128px;
+  // }
 }

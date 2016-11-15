@@ -16,10 +16,12 @@ class Album(model.Base):
   isCarousel = ndb.BooleanProperty(default=False)
   name = ndb.StringProperty()
   description = ndb.StringProperty()
+  albumType = ndb.StringProperty()
 
   FIELDS = {
     'name': fields.String,
-    'description': fields.String
+    'description': fields.String,
+    'albumType': fields.String
   }
 
   def get_resource_dbs(self, **kwargs):

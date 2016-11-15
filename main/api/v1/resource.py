@@ -37,15 +37,18 @@ class ResourceListAPI(flask_restful.Resource):
         resource_dbs, model.Resource.FIELDS, next_cursor,
       )
 
-  @auth.admin_required
+  @auth.login_required
   def delete(self):
     resource_keys = util.param('resource_keys', list)
     if not resource_keys:
       helpers.make_not_found_exception(
           'Resource(s) %s not found' % resource_keys
         )
-    resource_db_keys = [ndb.Key(urlsafe=k) for k in resource_keys]
-    delete_resource_dbs(resource_db_keys)
+    for k in resource_keys:
+        resource_db_key = ndb.Key(urlsafe=k)
+        resource_db = resource_db_key.get()
+        if resource_db.user_key == auth.current_user_key():
+            delete_resource_dbs([resource_db_key])
     return flask.jsonify({
         'result': resource_keys,
         'status': 'success',

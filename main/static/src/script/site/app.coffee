@@ -21,3 +21,8 @@ $ -> $('html.resource-upload').each ->
 
 $ -> $('html.album-update').each ->
   init_resource_upload()
+
+$ -> $('html.welcome').each ->
+  init_carousel_resource_upload()
+  init_delete_carousel_resource_button()
+  init_carousel_fullscreen()

@@ -132,7 +132,7 @@ def album_view(album_id):
 class AlbumUpdateForm(flask_wtf.FlaskForm):
   name = wtforms.TextField('Name', [wtforms.validators.required()])
   description = wtforms.TextField('Description', [wtforms.validators.required()])
-
+  albumType = wtforms.TextField('Type of album')
 
 @app.route('/album/<int:album_id>/update/', methods=['GET', 'POST'], endpoint='album_update')
 @auth.login_required

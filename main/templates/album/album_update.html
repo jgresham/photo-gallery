@@ -16,6 +16,7 @@
           {{form.csrf_token}}
           {{forms.text_field(form.name)}}
           {{forms.text_field(form.description)}}
+          {{forms.text_field(form.albumType)}}
 
           <button type="submit" class="btn btn-primary btn-block btn-loading" {{forms.data_loading_text()}}>
             Update
@@ -46,7 +47,7 @@
     drop files here
   </div>
   <div class="row resource-uploads">
-    <!-- <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 hide">
+    {# <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 hide">
       <div class="thumbnail">
         <div class="preview" style="background-image: url(http://files.vladstudio.com/joy/alien_and_chameleon/wall/vladstudio_alien_and_chameleon_480x272_signed.jpg)"></div>
         <h5>Example preview!</h5>
@@ -55,9 +56,33 @@
           <div class="progress-text">Hola amigo</div>
         </div>
       </div>
-    </div> -->
+    </div> #}
   </div>
-
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        # for resource_db in resource_dbs
+          # if resource_db.image_url
+            <div class="album-image-container">
+              <img class="img-responsive center-block album-image" src="{{resource_db.image_url}}=s512">
+              <div class="text-center">
+                <a class="btn btn-xs btn-success" href="{{url_for('resource_download', resource_id=resource_db.key.id())}}">
+                  <span class="fa fa-fw fa-cloud-download"></span>
+                </a>
+                <button class="btn btn-xs btn-danger btn-delete"
+                    data-api-url="{{url_for('api.resource', key=resource_db.key.urlsafe())}}"
+                    data-target="#{{resource_db.key.urlsafe()}}"
+                  >
+                  <span class="fa fa-fw fa-trash-o"></span>
+                </button>
+              </div>
+            </div>
+          # endif
+        # endfor
+      </div>
+    </div>
+  </div>
+  {#
   # for resource_db in resource_dbs
     <tr id="{{resource_db.key.urlsafe()}}" class="row-link" data-href="{{url_for('resource_view', resource_id=resource_db.key.id())}}">
       <td class="ellipsis">{{resource_db.name}}</td>
@@ -76,16 +101,9 @@
       </td>
       <td class="text-right text-nowrap">{{resource_db.size_human}}</td>
       <td class="text-nowrap not-link">
-        <a class="btn btn-xs btn-success" href="{{url_for('resource_download', resource_id=resource_db.key.id())}}">
-          <span class="fa fa-fw fa-cloud-download"></span>
-        </a>
-        <button class="btn btn-xs btn-danger btn-delete"
-            data-api-url="{{url_for('api.resource', key=resource_db.key.urlsafe())}}"
-            data-target="#{{resource_db.key.urlsafe()}}"
-          >
-          <span class="fa fa-fw fa-trash-o"></span>
-        </button>
+
       </td>
     </tr>
   # endfor
+  #}
 # endblock
