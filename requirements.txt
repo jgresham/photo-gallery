@@ -5,5 +5,4 @@ flask-restful==0.3.5
 flask-wtf==0.13.1
 flask==0.11.1
 unidecode==0.4.19
-GoogleAppEngineCloudStorageClient==1.9.22.1
 webargs==1.4.0

@@ -3,10 +3,11 @@
   <head>
     # include 'bit/meta.html'
     <title>
-      # block title
+      {# block title
         {{title + ' |' if title}}
       # endblock
-      {{config.CONFIG_DB.brand_name}}
+      {{config.CONFIG_DB.brand_name}} #}
+      kristianaphotography
     </title>
     # include 'bit/style.html'
     # block head
@@ -16,7 +17,7 @@
 
   <body>
     # include 'bit/header.html'
-    # include 'bit/announcement.html'
+    {# include 'bit/announcement.html' #}
     # block header
     # endblock
     <div class="container">

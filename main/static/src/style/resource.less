@@ -73,7 +73,21 @@ td {
 }
 
 // JGRESHAM
-
+.welcome, .album-view, .album-update {
+  p {
+    font-size: 15px;
+  }
+  .navbar {
+    margin-bottom: 0px;
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    z-index: 2;
+    background-color: transparent;
+    border: none;
+  }
+}
 .album-view, .album-update {
   .album-image {
     margin-bottom: 5px;
@@ -81,8 +95,30 @@ td {
   .album-image-container {
     margin-bottom: 10px;
   }
+  .album-name.title {
+    margin-bottom: 50px;
+  }
 }
 .welcome {
+  body {
+    padding-top: 0px;
+  }
+  header.navbar *, header.navbar .navbar-nav > li > a {
+    color: white;
+  }
+  .row-album {
+    padding-top: 55px;
+    padding-bottom: 55px;
+  }
+  .img-center {
+    position: absolute;
+     left: 50%;
+     top: 50%;
+     -webkit-transform: translateY(-50%) translateX(-50%);
+     height: 100%;
+     max-width: none;
+     border: none;
+  }
   .album-image-a {
     position:relative;
     height: 100%;
@@ -102,6 +138,12 @@ td {
       text-align:center;
       z-index:2;
   }
+  .caption-container {
+    position: absolute;
+     left: 50%;
+     top: 50%;
+     -webkit-transform: translateY(-50%) translateX(-50%);
+  }
   .col-carousel_resource {
     display: flex;
     justify-content: center;
@@ -110,8 +152,11 @@ td {
   .col-carousel_resource .image-preview {
     align-self: center;
   }
-  .col-carousel_resource, .col-album {
+  .col-carousel_resource {
     height: 150px;
+  }
+  .col-album {
+    height: 300px;
   }
   .jumbotron {
     height:100%;

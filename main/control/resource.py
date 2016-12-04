@@ -13,7 +13,6 @@ import model
 import util
 
 from main import app
-import cloudstorage as gcs
 
 ###############################################################################
 # Upload

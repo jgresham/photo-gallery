@@ -3,14 +3,6 @@
 # block header
   <div class="jumbotron">
     # if isEditMode
-      {#
-      <div class="jumbotron">
-          <div class="container">
-            <h1>{{config.CONFIG_DB.brand_name}}</h1>
-            <p>Hello, world!</p>
-          </div>
-      </div>
-      #}
       <div class="row resource-uploads">
         <div class="col-xs-12 col-md-4 col-lg-3 carousel-edit-image carousel-edit-image-upload col-carousel_resource">
           <div class="image-preview">
@@ -58,34 +50,38 @@
       <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-pause="false" data-interval="8000">
 
         <ol class="carousel-indicators">
-          # for carousel_resource_db in carousel_resource_dbs
-            # if carousel_resource_db.image_url
-              # if loop.index0 == 0
-                <li data-target="#carousel-example-generic" data-slide-to="{{loop.index0}}" class="active"></li>
-              # else
-                <li data-target="#carousel-example-generic" data-slide-to="{{loop.index0}}"></li>
+          # if carousel_resource_dbs is not none
+            # for carousel_resource_db in carousel_resource_dbs
+              # if carousel_resource_db.image_url
+                # if loop.index0 == 0
+                  <li data-target="#carousel-example-generic" data-slide-to="{{loop.index0}}" class="active"></li>
+                # else
+                  <li data-target="#carousel-example-generic" data-slide-to="{{loop.index0}}"></li>
+                # endif
               # endif
-            # endif
-          # endfor
+            # endfor
+          # endif
 
         </ol>
 
         <div class="carousel-inner" role="listbox">
-          # for carousel_resource_db in carousel_resource_dbs
-            # if carousel_resource_db.image_url
-              # if loop.index0 == 0
-                <div class="item active">
-                  <div class="fill" style="background-image:url('{{carousel_resource_db.image_url}}');">
+          # if carousel_resource_dbs is not none
+            # for carousel_resource_db in carousel_resource_dbs
+              # if carousel_resource_db.image_url
+                # if loop.index0 == 0
+                  <div class="item active">
+                    <div class="fill" style="background-image:url('{{carousel_resource_db.image_url}}=s0');">
+                    </div>
                   </div>
-                </div>
-              # else
-                <div class="item">
-                  <div class="fill" style="background-image:url('{{carousel_resource_db.image_url}}');">
+                # else
+                  <div class="item">
+                    <div class="fill" style="background-image:url('{{carousel_resource_db.image_url}}=s0');">
+                    </div>
                   </div>
-                </div>
+                # endif
               # endif
-            # endif
-          # endfor
+            # endfor
+          # endif
         </div>
       </div>
     # endif
@@ -93,9 +89,9 @@
 # endblock
 
 # block content
-  <div class="row">
+  <div class="row row-album">
     # if isEditMode
-    <div class="col-sm-6 col-md-4 col-lg-3 col-album">
+    <div class="col-sm-6 col-md-4 col-lg-4 col-album">
       <h2>New Album</h2>
       <a class="btn btn-default" href="{{url_for('album_create')}}" title="New Album">
         <span class="fa fa-plus fa-fw"></span>
@@ -103,15 +99,17 @@
     </div>
     # endif
     # for album_info in album_list
-      <div class="col-sm-6 col-md-4 col-lg-3 col-album">
+      <div class="col-sm-6 col-md-4 col-lg-4 col-album">
         <a class="album-image-a" href="{{url_for('album_view', album_id=album_info['album_db'].key.id())}}">
           <div class="caption">
-            <h2>{{album_info['album_db'].name}}</h2>
-            <p>{{album_info['album_db'].description}}</p>
+            <div class="caption-container">
+              <h1 class="title">{{album_info['album_db'].name}}</h1>
+              <p>{{album_info['album_db'].description}}</p>
+            </div>
           </div>
           # if album_info['image_url']
             <div class="image-preview">
-              <img class="img-responsive img-thumbnail" src="{{album_info['image_url']}}=s1024">
+              <img class="img-responsive img-thumbnail img-center" src="{{album_info['image_url']}}=s1024">
             </div>
           # endif
         </a>

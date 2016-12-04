@@ -131,17 +131,15 @@ carousel_resource_upload_handler =
 window.init_delete_carousel_resource_button = () ->
   $('body').on 'click', '.btn-delete', (e) ->
     e.preventDefault()
-    if confirm('Press OK to delete the resource')
-      $(this).attr('disabled', 'disabled')
-      api_call 'DELETE', $(this).data('api-url'), (err, result) =>
-        if err
-          $(this).removeAttr('disabled')
-          LOG 'Something went terribly wrong during delete!', err
-          return
-        target = $(this).data('target')
-        colToDelete = $(this).closest(".col-carousel_resource")
-        if colToDelete
-          colToDelete.remove()
+    api_call 'DELETE', $(this).data('api-url'), (err, result) =>
+      if err
+        $(this).removeAttr('disabled')
+        LOG 'Something went terribly wrong during delete!', err
+        return
+      target = $(this).data('target')
+      colToDelete = $(this).closest(".col-carousel_resource")
+      if colToDelete
+        colToDelete.remove()
 
 window.init_delete_resource_button = () ->
   $('body').on 'click', '.btn-delete', (e) ->
@@ -179,8 +177,11 @@ window.init_carousel_fullscreen = () ->
     $(this).find('.caption').fadeOut 250
     #.slideUp(205)
     return
-  #
-  # $('.carousel').carousel({
-  #   interval: 6000,
-  #   pause: "false"
-  # });
+
+window.addEventListener 'scroll', (->
+  if window.scrollY > 10
+    $('.navbar').fadeOut()
+  else
+    $('.navbar').fadeIn()
+  return
+), false

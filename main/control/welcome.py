@@ -18,8 +18,9 @@ import pdb
 def welcome():
     return make_home_template(isEditMode=False)
 
+# todo, securetodo: check if hostname matches user registerd
 @app.route('/edit')
-@auth.login_required
+@auth.admin_required
 def edit():
   return make_home_template(isEditMode=True)
 

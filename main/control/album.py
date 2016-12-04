@@ -13,7 +13,6 @@ import model
 import util
 
 from main import app
-import cloudstorage as gcs
 
 from urlparse import urlparse
 import pdb
@@ -22,7 +21,7 @@ import pdb
 # Upload
 ###############################################################################
 @app.route('/album/create')
-@auth.login_required
+@auth.admin_required
 def album_create():
     # album_db = model.Album.get_by_id(album_id)
     #
@@ -33,6 +32,7 @@ def album_create():
     #         resource_dbs = album_db.get_resource_dbs()
     #
     # if not album_db:
+    # todo, securetodo: check if user is registerd with hostname>?
     parsed_request = urlparse(flask.request.url)
     hostname = parsed_request.hostname
     album_db = model.Album(
@@ -58,7 +58,7 @@ def album_create():
     # )
 
 @app.route('/album/create/carousel')
-@auth.login_required
+@auth.admin_required
 def album_create_carousel():
     parsed_request = urlparse(flask.request.url)
     hostname = parsed_request.hostname
@@ -114,7 +114,7 @@ def album_create_carousel():
 def album_view(album_id):
   album_db = model.Album.get_by_id(album_id)
 
-  if not album_db or album_db.user_key != auth.current_user_key():
+  if not album_db:
     return flask.abort(404)
 
   resource_dbs, cursors = album_db.get_resource_dbs()
@@ -135,7 +135,7 @@ class AlbumUpdateForm(flask_wtf.FlaskForm):
   albumType = wtforms.TextField('Type of album')
 
 @app.route('/album/<int:album_id>/update/', methods=['GET', 'POST'], endpoint='album_update')
-@auth.login_required
+@auth.admin_required
 def album_update(album_id):
   album_db = model.Album.get_by_id(album_id)
 
