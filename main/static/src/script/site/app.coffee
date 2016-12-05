@@ -19,8 +19,13 @@ $ -> $('html.resource-view').each ->
 $ -> $('html.resource-upload').each ->
   init_resource_upload()
 
+$ -> $('html.album-view').each ->
+  init_album_resource_view()
+
 $ -> $('html.album-update').each ->
+  init_album_resource_view()
   init_resource_upload()
+  init_delete_album_resource_button()
 
 $ -> $('html.welcome').each ->
   init_carousel_resource_upload()

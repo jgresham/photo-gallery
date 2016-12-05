@@ -91,7 +91,7 @@
 # block content
   <div class="row row-album">
     # if isEditMode
-    <div class="col-sm-6 col-md-4 col-lg-4 col-album">
+    <div class="col-sm-4 col-md-4 col-lg-4 col-album">
       <h2>New Album</h2>
       <a class="btn btn-default" href="{{url_for('album_create')}}" title="New Album">
         <span class="fa fa-plus fa-fw"></span>
@@ -99,7 +99,7 @@
     </div>
     # endif
     # for album_info in album_list
-      <div class="col-sm-6 col-md-4 col-lg-4 col-album">
+      <div class="col-sm-4 col-md-4 col-lg-4 col-album">
         <a class="album-image-a" href="{{url_for('album_view', album_id=album_info['album_db'].key.id())}}">
           <div class="caption">
             <div class="caption-container">

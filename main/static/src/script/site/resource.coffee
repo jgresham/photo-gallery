@@ -141,6 +141,31 @@ window.init_delete_carousel_resource_button = () ->
       if colToDelete
         colToDelete.remove()
 
+window.init_album_resource_view = () ->
+  $('.album-image').attr 'src', () ->
+    scrnWidth = $(window).width()
+    if scrnWidth > 768
+      return this.src + '1024'
+    else if scrnWidth > 512
+      return this.src + '768'
+    else
+      return this.src + '512'
+
+window.init_delete_album_resource_button = () ->
+  $('body').on 'click', '.btn-delete', (e) ->
+    e.preventDefault()
+    if confirm('Press OK to delete the resource')
+      $(this).attr('disabled', 'disabled')
+      api_call 'DELETE', $(this).data('api-url'), (err, result) =>
+        if err
+          $(this).removeAttr('disabled')
+          LOG 'Something went terribly wrong during delete!', err
+          return
+        target = $(this).data('target')
+        albumContainerToDelete = $(this).closest(".album-image-container")
+        if albumContainerToDelete
+          albumContainerToDelete.remove()
+
 window.init_delete_resource_button = () ->
   $('body').on 'click', '.btn-delete', (e) ->
     e.preventDefault()

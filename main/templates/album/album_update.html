@@ -64,14 +64,15 @@
         # for resource_db in resource_dbs
           # if resource_db.image_url
             <div class="album-image-container">
-              <img class="img-responsive center-block album-image" src="{{resource_db.image_url}}=s512">
+              <img class="img-responsive center-block album-image" src="{{resource_db.image_url}}=s">
               <div class="text-center">
                 <a class="btn btn-xs btn-success" href="{{url_for('resource_download', resource_id=resource_db.key.id())}}">
                   <span class="fa fa-fw fa-cloud-download"></span>
                 </a>
                 <button class="btn btn-xs btn-danger btn-delete"
                     data-api-url="{{url_for('api.resource', key=resource_db.key.urlsafe())}}"
-                    data-target="#{{resource_db.key.urlsafe()}}"
+                    {# data-target="#{{resource_db.key.urlsafe()}}" #}
+                    title="Delete"
                   >
                   <span class="fa fa-fw fa-trash-o"></span>
                 </button>
