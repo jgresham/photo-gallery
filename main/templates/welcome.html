@@ -24,7 +24,7 @@
         </div>
         # for carousel_resource_db in carousel_resource_dbs
           # if carousel_resource_db.image_url
-            <div class="col-xs-12 col-md-4 col-lg-3 col-carousel_resource">
+            <div class="col-xs-12 col-md-4 col-lg-3 col-carousel_resource delete-container">
               <div class="image-preview carousel-edit-image">
                 <img class="img-responsive img-thumbnail" src="{{carousel_resource_db.image_url}}=s128">
                 <button class="btn btn-danger btn-delete"
@@ -99,12 +99,12 @@
     </div>
     # endif
     # for album_info in album_list
-      <div class="col-sm-4 col-md-4 col-lg-4 col-album">
+      <div class="col-sm-4 col-md-4 col-lg-4 col-album delete-container">
         <a class="album-image-a" href="{{url_for('album_view', album_id=album_info['album_db'].key.id())}}">
           <div class="caption">
             <div class="caption-container">
               <h1 class="title">{{album_info['album_db'].name}}</h1>
-              <p>{{album_info['album_db'].description}}</p>
+              <p>{{album_info['album_db'].albumType}}</p>
             </div>
           </div>
           # if album_info['image_url']
@@ -113,6 +113,19 @@
             </div>
           # endif
         </a>
+        <a class="mobile-caption-link" href="{{url_for('album_view', album_id=album_info['album_db'].key.id())}}">
+          <div class="mobile-caption">
+            <h1 class="title">{{album_info['album_db'].name}}</h1>
+            <p>{{album_info['album_db'].albumType}}</p>
+          </div>
+          </a>
+          # if isEditMode
+            <button class="btn btn-danger btn-delete"
+                data-api-url="{{url_for('api.album', key=album_info['album_db'].key.urlsafe())}}"
+                title="Delete">
+              <span class="fa fa-trash-o"></span>
+            </button>
+          # endif
       </div>
     # endfor
   </div>

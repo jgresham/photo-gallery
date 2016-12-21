@@ -30,4 +30,5 @@ $ -> $('html.album-update').each ->
 $ -> $('html.welcome').each ->
   init_carousel_resource_upload()
   init_delete_carousel_resource_button()
+  # init_delete_album_button()
   init_carousel_fullscreen()

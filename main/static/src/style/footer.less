@@ -3,19 +3,19 @@ html {
   min-height: 100%;
 }
 
-body {
-  margin-bottom: @footer-height;
+body .container {
+  margin-bottom: 60px;
 }
 
 .footer {
-  position: absolute;
+  // position: absolute;
   bottom: 0;
   display: table;
   width: 100%;
   height: @footer-height;
-  border-top: 1px solid @hr-border;
+  // border-top: 1px solid @hr-border;
   color: @text-muted;
-  background-color: @well-bg;
+  // background-color: @well-bg;
   text-align: center;
   & > .container {
     display: table-cell;
@@ -23,5 +23,18 @@ body {
     p:last-child {
       margin-bottom: 0;
     }
+  }
+
+  a {
+    color: @text-muted;
+    text-decoration: none;
+  }
+
+  #instafeed {
+    margin-top: @height-lg;
+    margin-bottom: @height-lg;
+  }
+
+  #instafeed a {
   }
 }

@@ -86,6 +86,7 @@ td {
     z-index: 2;
     background-color: transparent;
     border: none;
+    max-height: 50px;
   }
 }
 .album-view, .album-update {
@@ -99,10 +100,34 @@ td {
     margin-bottom: 50px;
   }
 }
+a .mobile-caption {
+  text-align: center;
+  text-decoration: none;
+  padding-bottom: 35px;
+}
+a.mobile-caption-link {
+  color: inherit;
+  text-decoration: none;
+}
+a.mobile-caption-link:hover,
+a.mobile-caption-link:focus {
+  color: #777;
+}
 .welcome {
+  @media (max-width: 768px) {
+    .album-image-a .caption {
+      display: none;
+    }
+    a .mobile-caption {
+      display: block;
+    }
+  }
   @media (min-width: 768px) {
+    a .mobile-caption {
+      display: none;
+    }
     .container {
-      width: auto;
+      width: 95%;
     }
   }
   body {
@@ -126,7 +151,7 @@ td {
   }
   .album-image-a {
     position:relative;
-    height: 100%;
+    height: 300px;
     overflow:hidden;
     display: block;
     color: inherit;
@@ -160,10 +185,16 @@ td {
   .col-carousel_resource {
     height: 150px;
   }
+  .col-carousel_resource .preview{
+    height: 100px;
+    width: 128px;
+    background-size: cover;
+    align-self: center;
+  }
   .col-album {
-    height: 300px;
     padding-left: 0px;
     padding-right: 0px;
+    text-align: center;
   }
   .jumbotron {
     height:100%;

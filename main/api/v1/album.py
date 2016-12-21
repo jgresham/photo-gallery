@@ -65,7 +65,9 @@ class AlbumAPI(flask_restful.Resource):
     album_db = ndb.Key(urlsafe=key).get()
     if not album_db or album_db.user_key != auth.current_user_key():
       helpers.make_not_found_exception('Album %s not found' % key)
-    delete_resource_key(album_db.key)
+    resource_dbs, cursors = album_db.get_resource_dbs()
+    delete_resource_dbs(resource_dbs)
+    delete_album_key(album_db.key)
     return helpers.make_response(album_db, model.Album.FIELDS)
 
 
@@ -99,18 +101,33 @@ class AlbumResourceUploadAPI(flask_restful.Resource):
 ###############################################################################
 # Helpers
 ###############################################################################
+# @ndb.transactional(xg=True)
+# def delete_resource_dbs(resource_db_keys):
+#   for resource_key in resource_db_keys:
+#     delete_resource_key(resource_key)
+
+
+# def delete_resource_key(resource_key):
+#   resource_db = resource_key.get()
+#   if resource_db:
+#     blobstore.BlobInfo.get(resource_db.blob_key).delete()
+#     resource_db.key.delete()
+
 @ndb.transactional(xg=True)
-def delete_resource_dbs(resource_db_keys):
-  for resource_key in resource_db_keys:
-    delete_resource_key(resource_key)
+def delete_album_key(album_key):
+  album_db = album_key.get()
+  if album_db:
+    album_db.key.delete()
+
+def delete_resource_dbs(resource_dbs):
+  for resource_db in resource_dbs:
+    delete_resource_db(resource_db)
 
 
-def delete_resource_key(resource_key):
-  resource_db = resource_key.get()
+def delete_resource_db(resource_db):
   if resource_db:
     blobstore.BlobInfo.get(resource_db.blob_key).delete()
     resource_db.key.delete()
-
 
 def resource_db_from_upload(album_db):
   try:

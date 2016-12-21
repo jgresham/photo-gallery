@@ -4,7 +4,8 @@
     "bootstrap": "~3",
     "font-awesome": "~4",
     "jquery": "~3",
-    "moment": "~2"
+    "moment": "~2",
+    "instafeed.js": "1.4.1"
   },
   "overrides": {
     "bootstrap": {

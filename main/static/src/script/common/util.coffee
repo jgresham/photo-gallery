@@ -9,7 +9,18 @@ window.init_common = ->
   init_time()
   init_announcement()
   init_row_link()
+  init_instafeed()
 
+window.init_instafeed = ->
+  feed = new Instafeed(
+    get: 'user'
+    userId: '2203737897'
+    accessToken: '2203737897.1677ed0.94ce10d6d84a490b8e9b9c8b80d5d88f'
+    target: 'instafeed'
+    resolution: 'thumbnail'
+    limit: '8'
+  )
+  feed.run()
 
 window.init_loading_button = ->
   $('body').on 'click', '.btn-loading', ->

@@ -18,7 +18,7 @@ window.init_resource_upload = () ->
 upload_handler =
   preview: (file) ->
     $resource = $ """
-        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+        <div class="col-lg-3 col-md-4 col-xs-12">
           <div class="thumbnail">
             <div class="preview"></div>
             <h5>#{file.name}</h5>
@@ -87,12 +87,17 @@ window.init_carousel_resource_upload = () ->
 carousel_resource_upload_handler =
   preview: (file) ->
     $resource = $ """
-        <div class="col-xs-12 col-md-4 col-lg-3">
+        <div class="col-xs-12 col-md-4 col-lg-3 col-carousel_resource">
           <div class="image-preview carousel-edit-image">
             <div class="img-responsive img-thumbnail preview"></div>
           </div>
         </div>
       """
+    $resource = $ """
+      <div class="col-xs-12 col-md-4 col-lg-3 col-carousel_resource">
+        <div class="img-responsive img-thumbnail .image-preview preview"></div>
+      </div>
+    """
     $preview = $('.preview', $resource)
 
     if file_uploader.active_files < 16 and file.type.indexOf("image") is 0
@@ -137,7 +142,7 @@ window.init_delete_carousel_resource_button = () ->
         LOG 'Something went terribly wrong during delete!', err
         return
       target = $(this).data('target')
-      colToDelete = $(this).closest(".col-carousel_resource")
+      colToDelete = $(this).closest(".delete-container")
       if colToDelete
         colToDelete.remove()
 
@@ -195,9 +200,10 @@ window.init_carousel_fullscreen = () ->
     $item.height($wHeight)
 
   $('.album-image-a').hover (->
-    $(this).find('.caption').fadeIn 250
-    #.slideDown(250)
-    return
+      if $(document).width() > 768
+        $(this).find('.caption').fadeIn 250
+      #.slideDown(250)
+      return
   ), ->
     $(this).find('.caption').fadeOut 250
     #.slideUp(205)
