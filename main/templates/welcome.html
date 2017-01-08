@@ -70,12 +70,12 @@
               # if carousel_resource_db.image_url
                 # if loop.index0 == 0
                   <div class="item active">
-                    <div class="fill" style="background-image:url('{{carousel_resource_db.image_url}}=s0');">
+                    <div class="fill" style="background-image:url('{{carousel_resource_db.image_url}}=s2048');">
                     </div>
                   </div>
                 # else
                   <div class="item">
-                    <div class="fill" style="background-image:url('{{carousel_resource_db.image_url}}=s0');">
+                    <div class="fill" style="background-image:url('{{carousel_resource_db.image_url}}=s2048');">
                     </div>
                   </div>
                 # endif
@@ -109,7 +109,7 @@
           </div>
           # if album_info['image_url']
             <div class="image-preview">
-              <img class="img-responsive img-thumbnail img-center" src="{{album_info['image_url']}}=s1024">
+              <img class="img-responsive img-thumbnail img-center" src="{{album_info['image_url']}}=s768">
             </div>
           # endif
         </a>

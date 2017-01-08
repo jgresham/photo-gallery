@@ -27,7 +27,8 @@ def edit():
 def make_home_template(isEditMode):
     parsed_request = urlparse(flask.request.url)
     hostname = parsed_request.hostname
-
+    if 'www.' in hostname:
+        hostname = hostname.split('www.')[1]
 
     # get carousel resources
     query = model.Album.query(

@@ -147,14 +147,39 @@ window.init_delete_carousel_resource_button = () ->
         colToDelete.remove()
 
 window.init_album_resource_view = () ->
+  wh = $(window).height()
+  ww = $(window).width()
+  $('.album-image').css 'max-height', $(window).height()
+
   $('.album-image').attr 'src', () ->
-    scrnWidth = $(window).width()
-    if scrnWidth > 768
-      return this.src + '1024'
-    else if scrnWidth > 512
-      return this.src + '768'
-    else
-      return this.src + '512'
+        scrnWidth = $(window).width()
+        imgSrc = this.src.replace(/\d+$/, "")
+        if scrnWidth > 1024
+          return imgSrc + '1024'
+        else if scrnWidth > 768
+          return imgSrc + '1024'
+        else if scrnWidth > 512
+          return imgSrc + '768'
+        else
+          return imgSrc + '512'
+  $(window).on 'resize', () ->
+    if $(window).width() > ww
+      $('.album-image').attr 'src', () ->
+        scrnWidth = $(window).width()
+        currNatrlImgWidth = this.src.match(/\d+$/, "")
+        if currNatrlImgWidth < $(window).width()
+          imgSrc = this.src.replace(/\d+$/, "")
+          if scrnWidth > 1024
+            return imgSrc + '2048'
+          else if scrnWidth > 768
+            return imgSrc + '1024'
+          else if scrnWidth > 512
+            return imgSrc + '768'
+          else
+            return imgSrc + '512'
+    wh = $(window).height()
+    ww = $(window).width()
+    $('.album-image').css 'max-height', $(window).height()
 
 window.init_delete_album_resource_button = () ->
   $('body').on 'click', '.btn-delete', (e) ->

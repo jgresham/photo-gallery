@@ -35,6 +35,8 @@ def album_create():
     # todo, securetodo: check if user is registerd with hostname>?
     parsed_request = urlparse(flask.request.url)
     hostname = parsed_request.hostname
+    if 'www.' in hostname:
+        hostname = hostname.split('www.')[1]
     album_db = model.Album(
         user_key=auth.current_user_key(),
         hostname=hostname
@@ -62,7 +64,9 @@ def album_create():
 def album_create_carousel():
     parsed_request = urlparse(flask.request.url)
     hostname = parsed_request.hostname
-
+    if 'www.' in hostname:
+        hostname = hostname.split('www.')[1]
+        
     query = model.Album.query(
       ndb.AND(
         user_key==auth.current_user_key(),
